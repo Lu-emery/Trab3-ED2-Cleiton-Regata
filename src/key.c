@@ -68,9 +68,18 @@ Key subset_sum(Key k, Key T[N]) {
     for (int i = 0; i < N; i++) {
         if (bit(k, i)) {
             sum = add(sum, T[i]);
-            printf("%2d ", i);           // Para teste.
-            print_key(T[i]);             // Para teste.
+            //printf("%2d ", i);           // Para teste.
+            //print_key(T[i]);             // Para teste.
         }
     }
    return sum;
+}
+
+//EXTRAS
+//Compara duas keys
+int comparaKey(Key a, Key b){
+    for(int i = 0; i < C; i++){
+        if(a.digit[i] != b.digit[i]) return 0;
+    }
+    return 1;
 }
