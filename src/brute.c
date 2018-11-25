@@ -15,41 +15,41 @@
 #include <string.h>
 #include "key.h"
 
-//veriaveis globais
-//Key entrada;
+// Variaveis globais
+// Key entrada;
 
 Key T[N];                      // A tabela T.
 Key entrada;
 
-//Encripta a palavra dada como entrada e compara a
-//emcriptação gerada com a que queremos encontrar
+// Encripta a palavra dada como entrada e compara a
+// Encriptação gerada com a que queremos encontrar
 void brute(char* palavra){
     Key password;                  // A senha fornecida pelo usuário.
     Key encrypted;                 // A senha criptografada.
 
-    //Cria key regerente ao password informado
+    // Cria key regerente ao password informado
     password = init_key((unsigned char *) palavra);
 
     // Calcula a soma de subconjunto.
     encrypted = subset_sum(password, T);
 
-    //compara a emcriptação da entrada em questão
-    //com a encriptação gerada
+    // Compara a emcriptação da entrada em questão
+    //     com a encriptação gerada
     if(comparaKey(entrada, encrypted)){
         print_key(password);
     }
 
 }
 
-//Cada loop varia um caracter com todas as varieades possiveis
-//A recursão é chamada novamente somente se ainda couber mais
-//um elemento
+// Cada loop varia um caracter com todas as varieades possiveis
+//     a recursão é chamada novamente somente se ainda couber mais
+//     um elemento
 void geradorPalavra(int atual, char palavra[C]){
-    for(int j = 0; j < 32; j++){
-        if(atual == C-1){
+    for(int j = 0; j < 32; j++) {
+        if(atual == C-1) {
             palavra[atual] = ALPHABET[j];
             brute(palavra);
-        }else {
+        } else {
             palavra[atual] = ALPHABET[j];
             geradorPalavra(atual+1, palavra);
 
@@ -69,12 +69,14 @@ int main(int argc, char *argv[]) {
     entrada = init_key((unsigned char *) argv[1]);
     //print_key(entrada);
 
-    //Gera palavra de tamanho variado
+    // Gera palavra de tamanho variado
+    //     palvra é a string que recebe todas as combinações
+    //     a ser comparadas com o resultado
     char palavra[C+1];
-    palavra[C] = '\0';//para a string ser printada precisa terinar com '\0'
+    palavra[C] = '\0';// para a string ser printada precisa terinar com '\0'
 
     // Lê a tabela T.
-    //T está como variavel global nessa implementação
+    // T está como variavel global nessa implementação
     unsigned char buffer[C+1];     // Buffer temporário.
     for (int i = 0; i < N; i++) {
         scanf("%s", buffer);
