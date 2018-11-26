@@ -76,10 +76,18 @@ Key subset_sum(Key k, Key T[N]) {
 }
 
 //EXTRAS
-//Compara duas keys
+// Compara duas keys
 int comparaKey(Key a, Key b){
     for(int i = 0; i < C; i++){
         if(a.digit[i] != b.digit[i]) return 0;
     }
     return 1;
+}
+
+Key setZero(){
+  Key a;
+  for (int i = 0; i < C; i++) {
+    a.digit[i] = 0;
+  }
+  return a;
 }

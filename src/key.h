@@ -13,6 +13,7 @@
 // a passagem de parâmetros nas funções.
 typedef struct {
     unsigned char digit[C];
+    int linha;
 } Key;
 
 // Inicializa e retorna uma chave a partir do vetor de char dado.
@@ -38,5 +39,6 @@ Key subset_sum(Key k, Key T[N]);
 //EXTRAS
 //Compara duas keys
 int comparaKey(Key a, Key b);
+Key setZero();
 
 #endif

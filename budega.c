@@ -30,7 +30,7 @@ int comparaNode (char string[C], Node* no) {
 }
 
 int comparaString (char *p1, char *p2) {
-	
+
 	// Para cada caracter na string
 	for (int i, i < C, i++) {
 
@@ -50,12 +50,12 @@ int comparaString (char *p1, char *p2) {
 		}
 	}
 
-	// E retorna a diferença dos dois 
+	// E retorna a diferença dos dois
 	return c1 - c2;
 }
 
 Key somaNodes (Node* n1, Node* n2) {
-	
+
 }
 
 Node* senha {
@@ -79,17 +79,60 @@ sempre desce pra esquerda e, depois que começa, testa a direita primeiro
 
 armazenar os vetores de respostas em um vetor global
 
+4 - 3 = 1
+0 0100
++
+1 0011
+=
+1 0111
++
+0 0001
+=
+1 1000
 
-[7, 8], [6, 8, 1],
+[7, 
 
-				3
+entrada 15
+
+	senha atual 7 + 8 = 15
+				7
 				|
 				v
 				7
 			6		8
 		5				9
 	4						10
-1								14							
+1								14
+
+7 PRETO
+TESTA 0 + 7 = 7
+	  7 > 15 N
+	  7 == 15 N
+	  7 < 15 S
+	  DIREITA COM TESTA 7 8
+
+	  	8 CINZA
+		7 + 8 = 15
+		15 > 15 N
+		15 == 15 S
+		PRINTA
+		8 BRANCO
+		POS --
+		RETURN
+
+	 ESQUERDA COM TESTA 7 6
+
+		6 CINZA
+		7 + 6 = 13
+		13 > 15 N
+		13 == 15 N
+		13 < 15 S
+		DIRETA COM TESTA 7 6 NAO TEM
+		ESQUERDA COM TESTA 7 6 5
+
+			5 CINZA
+			13 + 5 = 18
+			18 > 15 RETURN
 
 
 */
