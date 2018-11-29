@@ -17,6 +17,7 @@ Key init_key(unsigned char s[]) {
     // a semântica do C para variáveis do tipo struct (não struct*) é fazer
     // uma cópia da struct inteira. Isso pode parecer ineficiente mas lembre
     // que o vetor da struct de chave é muito pequeno.
+    k.carry = 0;
     return k;
 }
 
@@ -36,6 +37,22 @@ void print_key(Key k) {
     printf("\n");
 }
 
+void print_key_carry(Key k) {
+    for (int i = 0; i < C; i++) {
+        printf("%c", ALPHABET[k.digit[i]]);
+    }
+    printf("  ");
+    for (int i = 0; i < C; i++) {
+        printf("%2d ", k.digit[i]);
+    }
+    printf("  ");
+    for (int i = 0; i < N; i++) {
+        printf("%d", bit(k, i));
+    }
+    printf("  %d", k.carry);
+    printf("\n");
+}
+
 // Exibe a chave 'k' em stdout somente no formato de chars.
 void print_key_char(Key k) {
     for (int i = 0; i < C; i++) {
@@ -52,12 +69,13 @@ int bit(Key k, int i) {
 // Retorna a + b (mod 2^N) .
 Key add(Key a, Key b) {
     Key c = {{0}};
-    int carry = 0;
+    int carry = b.carry;
     for (int i = C-1; i >= 0; i--) {
         int sum = a.digit[i] + b.digit[i] + carry;
         c.digit[i] = sum  % R;
         carry      = sum >= R;
     }
+    c.carry = carry;
     return c;
 }
 
@@ -72,6 +90,7 @@ Key subset_sum(Key k, Key T[N]) {
             //print_key(T[i]);             // Para teste.
         }
     }
+
    return sum;
 }
 

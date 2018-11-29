@@ -14,6 +14,7 @@
 typedef struct {
     unsigned char digit[C];
     int linha;
+    int carry;
 } Key;
 
 // Inicializa e retorna uma chave a partir do vetor de char dado.
@@ -40,5 +41,6 @@ Key subset_sum(Key k, Key T[N]);
 //Compara duas keys
 int comparaKey(Key a, Key b);
 Key setZero();
+void print_key_carry(Key k);
 
 #endif
