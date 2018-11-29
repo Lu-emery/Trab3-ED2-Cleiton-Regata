@@ -69,14 +69,40 @@ int bit(Key k, int i) {
 // Retorna a + b (mod 2^N) .
 Key add(Key a, Key b) {
     Key c = {{0}};
-    int carry = b.carry;
+    int carry = 0;
     for (int i = C-1; i >= 0; i--) {
         int sum = a.digit[i] + b.digit[i] + carry;
         c.digit[i] = sum  % R;
         carry      = sum >= R;
     }
-    c.carry = carry;
+
     return c;
+}
+
+// Soma (módulo 2^N) e retorna o subconjunto dos inteiros T[i] que
+// são indexados pelos bits de k.
+Key subset_sum_print(Key k, Key T[N]) {
+    Key sum = {{0}};
+    Key aux = {{0}};
+    Key test = {{0}};
+    for (int i = 0; i < N; i++) {
+        if (bit(k, i)) {
+            sum = add(sum, T[i]);
+            aux = add(aux, T[i]);
+            //printf("%2d ", i);           // Para teste.
+            //print_key(T[i]);             // Para teste.
+            if(i/5 == 1){
+                test = add(test, aux);
+                print_key(aux);
+                aux = init_key((unsigned char *) "aaaaa\0");
+                //print_key(aux);
+            }
+        }
+    }
+    printf("->");
+    print_key(aux);
+
+   return sum;
 }
 
 // Soma (módulo 2^N) e retorna o subconjunto dos inteiros T[i] que
@@ -87,7 +113,8 @@ Key subset_sum(Key k, Key T[N]) {
         if (bit(k, i)) {
             sum = add(sum, T[i]);
             //printf("%2d ", i);           // Para teste.
-            //print_key(T[i]);             // Para teste.
+
+
         }
     }
 

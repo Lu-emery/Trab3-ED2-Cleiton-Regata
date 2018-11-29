@@ -23,17 +23,17 @@ Key entrada;                   // Password dado como entrada
 Key TSomas[C][32];             // Cada resultado refente a um
                                // será guardado aqui
 
-Key easyEncrypt(char* palavra){
-    Key sum = {{0}};
-    Key password = init_key((unsigned char *) palavra);
-    print_key(password);
-    for(int i = 0; i < C-1; i++){
-        sum = add(sum, TSomas[i][password.digit[i]] );
-    }
-    print_key(sum);
-
-    return sum;
-}
+// Key easyEncrypt(char* palavra){
+//     Key sum = {{0}};
+//     Key password = init_key((unsigned char *) palavra);
+//     print_key(password);
+//     for(int i = 0; i < C-1; i++){
+//         sum = add(sum, TSomas[i][password.digit[i]] );
+//     }
+//     print_key(sum);
+//
+//     return sum;
+// }
 
 // Encripta a palavra dada como entrada e compara a
 // Encriptação gerada com a que queremos encontrar
@@ -42,11 +42,22 @@ void weak(char* palavra){
     Key password = init_key((unsigned char *) palavra);
 
     print_key(password);
+    printf("\n\n");
+
     for(int i = 0; i < C-1; i++){
         sum = add(sum, TSomas[i][password.digit[i]] );
+        print_key(TSomas[i][password.digit[i]]);
     }
-    print_key(sum);
-    sum = subset_sum(password, T);
+
+    //printf("\n\n");
+
+    //print_key(sum);
+
+    printf("\n" );
+
+    sum = subset_sum_print(password, T);
+
+    printf("\n\n");
     print_key(sum);
 
     // Compara a emcriptação da entrada em questão
@@ -54,8 +65,6 @@ void weak(char* palavra){
     if(comparaKey(entrada, sum)){
         //print_key(password);
     }
-
-    printf("test\n" );
 
 }
 
@@ -96,10 +105,10 @@ void somaCaracteres(int atual){
     for(int j = 0; j < 32; j++) {
         string[atual] = ALPHABET[j];
         chave = init_key((unsigned char *) string);
-        //print_key(chave);
+        print_key(chave);
         TSomas[atual][j] = subset_sum(chave, T);
-        //print_key_carry(TSomas[atual][j]);
-        //printf("\n");
+        print_key(TSomas[atual][j]);
+        printf("\n");
     }
 
     if(atual < C-1){
