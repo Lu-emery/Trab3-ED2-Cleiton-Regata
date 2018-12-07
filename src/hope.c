@@ -70,17 +70,14 @@ TabelaNode** criaTabela();
 void preencheTabela(TabelaNode**, int, Key, unsigned char*);
 // A tabela é criada dentro da função para não usar ela se C <= 5
 TabelaNode** criaTabela() {
-  printf("Criando tabela\n");
   tamTabela = R;
   for (int i = 1; i < caracteresTabela; i++) {
     tamTabela *= R;
   }
-  printf("Tabela tem tamanho %d\n", tamTabela);
   TabelaNode** tabelaCombinacoes = malloc(tamTabela * sizeof(TabelaNode*));
   for (int i = 0; i < tamTabela; i++) {
     tabelaCombinacoes[i] = malloc(sizeof(TabelaNode));
   }
-  printf("Tabela mallocada\n");
 
   Key combinacao = {{0}};
   unsigned char nome[caracteresTabela+1];
@@ -133,8 +130,9 @@ void preencheTabela(TabelaNode** tabela, int atual, Key combinacao, unsigned cha
       // printf("\n");
       tabela[contTabela]->chave = aux;
       for (int j = 0; j < caracteresTabela; j++) {
-        tabela[contTabela]->letras[j-1] = nome[j-1];
+        tabela[contTabela]->letras[j] = nome[j];
       }
+      tabela[contTabela]->letras[caracteresTabela] = '\0';
       contTabela++;
     }
 
@@ -147,40 +145,35 @@ void preencheTabela(TabelaNode** tabela, int atual, Key combinacao, unsigned cha
 
 unsigned char testeTabela[C+1];
 void weakComTabela(TabelaNode** tabela, Key sum, int atual, Key pass) {
-  Key aux;
+  Key aux = {{0}};
   testeTabela[atual] = '\0';
 
-  // sum tá virando pass na primeira execuçãao
-
   for (int i = 0; i < R; i++) {
+    aux = add(sum, TSomas[atual][i]);
     if (atual == C-caracteresTabela) {
       for (int j = 0; j < tamTabela; j++) {
-        if (testeTabela[1] == 'i') {
-          printf("Somando: [%s] e [%s]\n", testeTabela, tabela[j]->letras);
-          printf("Somando: \n");print_key(sum);print_key(tabela[j]->chave);
-        }
+        // printf("Somando: [%s] e [%s]\n", testeTabela, tabela[j]->letras);
+        // printf("Somando: \n");print_key(sum);print_key(tabela[j]->chave);
         aux = add(sum, tabela[j]->chave);
-        if (testeTabela[1] == 'i') {
-          printf("=== ");print_key(aux);printf("\n");
-        }
+        // printf("=== ");print_key(aux);printf("\n");
         // printf("Comparando keys: \n");
         // print_key(pass); print_key(aux);
 
         if (comparaKey(pass, aux)) {
-          for (int k = atual; k < C; k++) {
-            testeTabela[k] = tabela[j]->letras[k];
+          for (int k = 0; k < caracteresTabela; k++) {
+            testeTabela[k+atual] = tabela[j]->letras[k];
           }
-          printf("Saída [%d] - %s\n", ++contSaidas, testeTabela);
+          testeTabela[C] = '\0';
+          printf("[%d] - %s\n", ++contSaidas, testeTabela);
           return;
         }
       }
     }
-
     if (atual < C-caracteresTabela) {
       // printf("Foi de [%s] --para-> ", testeTabela);
       testeTabela[atual] = ALPHABET[i];
       // printf("[%s]\n", testeTabela);
-      weakComTabela(tabela, sum, atual+1, pass);
+      weakComTabela(tabela, aux, atual+1, pass);
     }
   }
 }
@@ -340,7 +333,6 @@ int main(int argc, char *argv[]) {
       tabelaCombinacoes = criaTabela();
     }
 
-    printf("\n\n===\nTabela feita com sucesso\n===\n\n");
 
     Key sum = {{0}};
     Key pass = init_key(palavra);
@@ -358,7 +350,7 @@ int main(int argc, char *argv[]) {
       free(tabelaCombinacoes);
     }
 
-    printf("\n\n===\nPrograma encerrado com sucesso\n===\n\n");
+    printf("\nPrograma encerrado com sucesso\n\n");
     return 0;
 
     //weak(palavra);
