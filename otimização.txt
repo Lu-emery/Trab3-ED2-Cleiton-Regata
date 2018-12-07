@@ -1,0 +1,29 @@
+// Tabela de símbolos
+
+// Um vetor de chaves com C caracteres (determinar o tamanho dele)
+// Associado a um vetor de resultados da soma dos caracteres em cada posição
+
+// f -> keyTable
+// aaeaab
+// keyTable[i] = "aaaaa"
+// resultTable[i] = 0000000000000000000
+
+
+// A estrutura key em key.c tem o tamanho total de uma senha
+// A estrutura chave nesse arquivo tem o tamanho das combinações a serem armazenadas (usaremos 5 como base)
+// Logo, estaremos armazenando uma tabela com todas as combinações possíveis de 5 caracteres dentro do alfabeto
+// Isso resulta em 36C5(376.992) combinações possíveis
+// Como cada combinação tem 5 caracteres, e cada caracter tem 5 bits
+// Teremos armazenados 118,755*5*5(9.424.800) bits, ou seja, 1.178.100 bytes => 1.1 MB (de RAM)
+
+
+// Otimização de Soma
+//   Reduz o tempo gasto em cada soma
+
+// Implementação de pilha
+//   Reduz a necessidade de refazer as somas sempre que mudar um caracter na key
+
+// Tabela de símbolos de combinações
+//   Armazena todas as somas possíveis para < N caracteres
+
+// Fazer um vetor normal pq ele vai ser ordenaado e a gente pode usar um for qualquer que passe na ordem de aaaa até 5555

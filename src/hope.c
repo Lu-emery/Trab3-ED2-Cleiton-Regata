@@ -23,49 +23,92 @@ Key entrada;                   // Password dado como entrada
 Key TSomas[C][32];             // Cada resultado refente a um
                                // será guardado aqui
 
-// Key easyEncrypt(char* palavra){
-//     Key sum = {{0}};
-//     Key password = init_key((unsigned char *) palavra);
-//     print_key(password);
-//     for(int i = 0; i < C-1; i++){
-//         sum = add(sum, TSomas[i][password.digit[i]] );
-//     }
-//     print_key(sum);
-//
-//     return sum;
-// }
+
+unsigned char testeAtual[C+1];
+int contSaidas = 0;
+
+void weakNew(Key sum, int atual, Key pass){
+  Key aux;
+
+  for(int i = 0; i < R; i++){
+    if (atual == C) {
+      if (comparaKey(pass, aux)) {
+        printf("[%d] - %s\n", ++contSaidas, testeAtual);
+      }
+      return;
+    }
+    aux = add(sum, TSomas[atual][i]);
+
+    if(atual < C){
+      testeAtual[atual] = ALPHABET[i];
+      weakNew(aux, atual +1, pass);
+    }
+  }
+}
+/*
+$ gcc -Wall key.c hope.c -o hope
+$ ./hope exvx5 < in/rand5.txt
+i0ocs
+passw
+/
+Entrada:
+exvx5   4 23 21 23 31   0010010111101011011111111
+Senhas possíveis:
+[1] - i0ocs
+[2] - passw
+
+
+===
+Programa encerrado com sucesso
+===
+
+
+real    2m44.873s
+user    2m1.063s
+sys     0m0.516s
+*/
+
 
 // Encripta a palavra dada como entrada e compara a
 // Encriptação gerada com a que queremos encontrar
 void weak(char* palavra){
+    int i;
     Key sum = {{0}};
     Key password = init_key((unsigned char *) palavra);
 
+    printf("Entrada: \n");
     print_key(password);
-    printf("\n\n");
+    printf("\n");
 
-    for(int i = 0; i < C-1; i++){
-        sum = add(sum, TSomas[i][password.digit[i]] );
-        print_key(TSomas[i][password.digit[i]]);
+
+    for(i = 0; i < C-1; i++){
+      printf("Sum [%d]: \n", i);
+      print_key(sum);
+      // TSoma[qual posição do caracter][qual caracter]
+      sum = add(sum, TSomas[i][password.digit[i]]);
     }
 
-    //printf("\n\n");
 
-    //print_key(sum);
+    printf("Sum [%d]: \n", i);
+    print_key(sum);
 
     printf("\n" );
 
-    sum = subset_sum_print(password, T);
+    sum = subset_sum(password, T);
+    printf("Sum Final: \n");
+    print_key(sum);
 
     printf("\n\n");
-    print_key(sum);
 
     // Compara a emcriptação da entrada em questão
     //     com a encriptação gerada
-    if(comparaKey(entrada, sum)){
-        //print_key(password);
+    if(comparaKey(entrada, sum) == 0){
+      printf("Senha foi encontrada.\nEntrada:\n");
+      print_key(password);
+      printf("Senha Resultante: \n");
+      print_key(sum);
+      printf("\n\n");
     }
-
 }
 
 // Cada loop varia um caracter com todas as varieades possiveis
@@ -102,14 +145,12 @@ void somaCaracteres(int atual){
     Key chave;
     palavraVazia(string);
 
-    for(int j = 0; j < 32; j++) {
-        string[atual] = ALPHABET[j];
-        chave = init_key((unsigned char *) string);
-        print_key(chave);
-        TSomas[atual][j] = subset_sum(chave, T);
-        print_key(TSomas[atual][j]);
-        printf("\n");
-    }
+    for(int j = 0; j < R; j++) {
+      string[atual] = ALPHABET[j];
+      chave = init_key((unsigned char *) string);
+      TSomas[atual][j] = subset_sum(chave, T);
+      }
+
 
     if(atual < C-1){
         atual++;
@@ -126,8 +167,6 @@ void leituraTabela(){
         scanf("%s", buffer);
         T[i] = init_key(buffer);
     }
-
-
 }
 
 /* Aqui iremos fazer o pre-processamento de todas as combinações
@@ -149,7 +188,8 @@ void geraTSoma(){
 
 }
 
-
+// ./a.out ../in/rand5.txt
+//./a.out palaf < ../in/rand5.txt
 int main(int argc, char *argv[]) {
 
     if (argc != 2) {
@@ -157,22 +197,41 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
+    unsigned char palavra[C+1];
+    for (int i = 0; i < C; i++) {
+      palavra[i] = argv[1][i];
+    }
+    palavra[C] = '\0';// para a string ser printada precisa terinar com '\0
+
     entrada = init_key((unsigned char *) argv[1]);
     //print_key(entrada);
-
-    // Gera palavra de tamanho variado
+    // Gera palavra de tamanho variad
     //     palvra é a string que recebe todas as combinações
     //     a ser comparadas com o resultado
-    char palavra[C+1] = "i0ocs";
-    //palavra[C] = '\0';// para a string ser printada precisa terinar com '\0'
+    testeAtual[C] = '\0';
 
     leituraTabela();
 
     somaCaracteres(0);
 
-    weak(palavra);
+
+    //weak(palavra);
+    Key sum = {{0}};
+    Key pass = init_key(palavra);
+
+    printf("Entrada: \n");
+    print_key(pass);
+    printf("Senhas possíveis: \n");
+
+
+    weakNew(sum, 0, pass);
+
+    if (contSaidas == 0) {
+      printf("Nenhuma senha possível\n");
+    }
 
     //geradorPalavra(0, palavra);
 
+    printf("\n\n===\nPrograma encerrado com sucesso\n===\n\n");
     return 0;
 }
