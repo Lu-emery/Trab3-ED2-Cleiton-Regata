@@ -17,21 +17,23 @@
 #include "hope.h"
 
 struct tabelaNode {
-  unsigned char letras[C+1];
+  unsigned char letras[C];
   Key chave;
-  TabelaNode* next;
 };
 
 TabelaNode** criaTabela() {
+
   // Calcula o número de combinações possíveis para a tabela
-  // Usamos 2x o valor mínimo para reduzir o número de colisões na hash
-  tamTabela = 4000037;
+  tamTabela = R;
+  for (int i = 1; i < caracteresTabela; i++) {
+    tamTabela *= R;
+  }
   printf("A tabela tem [%d] combinações\n", tamTabela);
 
   // Cria a tabela na memória com o tamanho referente
-  tabelaCombinacoes = malloc(tamTabela * sizeof(TabelaNode*));
-  for (int l = 0; l < tamTabela; l++) {
-    tabelaCombinacoes[l] = NULL;
+  TabelaNode** tabelaCombinacoes = malloc(tamTabela * sizeof(TabelaNode*));
+  for (int i = 0; i < tamTabela; i++) {
+    tabelaCombinacoes[i] = malloc(sizeof(TabelaNode));
   }
 
   // Chave auxiliar 'combinacao' começa vazia
@@ -44,31 +46,13 @@ TabelaNode** criaTabela() {
   nome[caracteresTabela] = '\0';
 
   // Preenche a tabela de combinações
-  preencheTabela(1, combinacao, nome);
+  preencheTabela(tabelaCombinacoes, 1, combinacao, nome);
 
   // Retorna a tabela de combinaçõeese
   return tabelaCombinacoes;
 }
 
-int tabelaKeyHash(Key key) {
-  int hash = 1;
-
-  for (int i = 0; i < C; i++) {
-    hash = (251*hash + key.digit[i]) % tamTabela;
-    // h = (251*h + s[i]) % M;
-  }
-
-  if (hash < 0) {
-    hash -= 2*hash;
-  }
-
-  //hash = hash % tamTabela;
-
-  // printf("Hash: [%d]\n", hash);
-  return hash;
-}
-
-void preencheTabela(int atual, Key combinacao, unsigned char* nome) {
+void preencheTabela(TabelaNode** tabela, int atual, Key combinacao, unsigned char* nome) {
 
   // Cria uma chave auxiliar vazia
   Key aux = {{0}};
@@ -85,93 +69,65 @@ void preencheTabela(int atual, Key combinacao, unsigned char* nome) {
     //   string ter o tamanho de uma chave completa
     if(atual == caracteresTabela) {
 
-      int hashTabela = tabelaKeyHash(aux);
-      // printf("hashTabela: [%d]\n", hashTabela);
-
-      if (tabelaCombinacoes[hashTabela] == NULL) {
-        // printf("Entrou no NULL\n\n\n\n\n");
-        tabelaCombinacoes[hashTabela] = malloc(sizeof(TabelaNode));
-        for (int j = 0; j < caracteresTabela; j++) {
-          tabelaCombinacoes[hashTabela]->letras[j] = nome[j];
-        }
-        tabelaCombinacoes[hashTabela]->letras[caracteresTabela] = '\0';
-        tabelaCombinacoes[hashTabela]->chave = aux;
-        tabelaCombinacoes[hashTabela]->next = NULL;
-        // printf("Inseriu na tabela [%s]: ", tabela[hashTabela]->letras); print_key(tabela[hashTabela]->chave);
-      } else {
-        // printf("Entrou no != NULL\n");
-        TabelaNode* auxNode = malloc(sizeof(TabelaNode));
-
-        for (int j = 0; j < caracteresTabela; j++) {
-          auxNode->letras[j] = nome[j];
-        }
-        auxNode->letras[caracteresTabela] = '\0';
-        auxNode->chave = aux;
-
-        auxNode->next = tabelaCombinacoes[hashTabela];
-        tabelaCombinacoes[hashTabela] = auxNode;
-
-        // Salvamos a chave e a string em uma posição da tabelaCombinacoes
-        // printf("Inseriu na tabelaCombinacoes [%s]: ", auxNode->next->letras); print_key(auxNode->next->chave);
+      // Salvamos a chave e a string em uma posição da tabela
+      tabela[contTabela]->chave = aux;
+      for (int j = 0; j < caracteresTabela; j++) {
+        tabela[contTabela]->letras[j] = nome[j];
       }
-      // printf("Fez hash [%d]\n", hashTabela);
+      tabela[contTabela]->letras[caracteresTabela] = '\0';
+
+      // Incrementamos o contador de posição, fazendo a tabela estar em ordem crescente (alfabética)
+      contTabela++;
     }
 
     // Se a string ainda não tem tamanho para ser útil
     if (atual < caracteresTabela) {
 
       // Executamos recursivamente o códido passando para a próxima posição na string
-      preencheTabela(atual+1, aux, nome);
+      preencheTabela(tabela, atual+1, aux, nome);
     }
   }
 }
 
-void weakComTabela(Key sum, int atual, Key pass) {
-  TabelaNode* auxNode;
+void weakComTabela(TabelaNode** tabela, Key sum, int atual, Key pass) {
   Key aux = {{0}};
   testeTabela[atual] = '\0';
 
   // Se posição + caracteres armazenados = C
   if (atual == C-caracteresTabela) {
 
-    Key passSub = sub(pass, sum);
-    // print_key(passSub);
+    // Percorre todas as posições da tabela de combinações armazenada
+    for (int j = 0; j < tamTabela; j++) {
 
-    int passSubHash = tabelaKeyHash(passSub);
-    if (tabelaCombinacoes[passSubHash] != NULL) {
-      auxNode = tabelaCombinacoes[passSubHash];
-      int cmp = 0;
-      while(auxNode != NULL) {
-        if (comparaKey(passSub, auxNode->chave)) {
-          cmp = 1;
-          break;
-        }
-        auxNode = auxNode->next;
-      }
+      // Adiciona o valor da combinação com o valor da chave até agora
+      aux = add(sum, tabela[j]->chave);
 
-      if (cmp) {
+      // Se o valor for igual ao da senha
+      if (comparaKey(pass, aux)) {
+
+        // Concatena as letras que geraram o valor armazenado à chave até agora
         for (int k = 0; k < caracteresTabela; k++) {
-          testeTabela[k+atual] = auxNode->letras[k];
+          testeTabela[k+atual] = tabela[j]->letras[k];
         }
         testeTabela[C] = '\0';
 
-        printf("Saída: [%s]\n", testeTabela);
+        // Printa a string resultante na tela
+        printf("[%d] - %s\n", ++contSaidas, testeTabela);
+        return;
       }
     }
-
   }
-    if (atual < C-caracteresTabela) {
-      // Para cada letra na posição 'atual'
-      for (int i = 0; i < R; i++) {
 
-        // Adiciona o valor da letra 'ALPHABET[i]' na posição 'atual' à chave
-        aux = add(sum, TSomas[atual][i]);
-        // Adiciona o caracter à string
-        testeTabela[atual] = ALPHABET[i];
+  // Para cada letra na posição 'atual'
+  for (int i = 0; i < R; i++) {
 
-        // Chama recursivmente a função para a próxima posição
-        weakComTabela(aux, atual+1, pass);
-    }
+    // Adiciona o valor da letra 'ALPHABET[i]' na posição 'atual' à chave
+    aux = add(sum, TSomas[atual][i]);
+    // Adiciona o caracter à string
+    testeTabela[atual] = ALPHABET[i];
+
+    // Chama recursivmente a função para a próxima posição
+    weakComTabela(tabela, aux, atual+1, pass);
   }
 }
 

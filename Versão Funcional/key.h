@@ -41,6 +41,7 @@ Key subset_sum(Key k, Key T[N]);
 //Compara duas keys
 int comparaKey(Key a, Key b);
 Key setZero();
-Key sub(Key a, Key b);
+void print_key_carry(Key k);
+Key subset_sum_print(Key k, Key T[N]);
 
 #endif
