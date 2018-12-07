@@ -74,6 +74,8 @@ TabelaNode** criaTabela() {
   for (int i = 1; i < caracteresTabela; i++) {
     tamTabela *= R;
   }
+  printf("Tabela tem tamanho [%d] combinações\n", tamTabela);
+  printf("Que equivale a [%d] bytes\n", tamTabela*C*B);
   TabelaNode** tabelaCombinacoes = malloc(tamTabela * sizeof(TabelaNode*));
   for (int i = 0; i < tamTabela; i++) {
     tabelaCombinacoes[i] = malloc(sizeof(TabelaNode));
@@ -145,13 +147,22 @@ void preencheTabela(TabelaNode** tabela, int atual, Key combinacao, unsigned cha
 
 unsigned char testeTabela[C+1];
 void weakComTabela(TabelaNode** tabela, Key sum, int atual, Key pass) {
+  printf("Entrou na weak [%d]\n", atual);
   Key aux = {{0}};
   testeTabela[atual] = '\0';
-
   for (int i = 0; i < R; i++) {
     aux = add(sum, TSomas[atual][i]);
     if (atual == C-caracteresTabela) {
+      printf("Começou a checar a tabela para [");
+      for (int l = 0; l < atual; l++) {
+        printf("%c", testeTabela[l]);
+      }
+      printf("%c]\n", ALPHABET[i]);
+      printf("Checou: \n");
       for (int j = 0; j < tamTabela; j++) {
+        if (j % 3000000 == 0) {
+          printf("[%d] combinações\n", j);
+        }
         // printf("Somando: [%s] e [%s]\n", testeTabela, tabela[j]->letras);
         // printf("Somando: \n");print_key(sum);print_key(tabela[j]->chave);
         aux = add(sum, tabela[j]->chave);
@@ -164,10 +175,11 @@ void weakComTabela(TabelaNode** tabela, Key sum, int atual, Key pass) {
             testeTabela[k+atual] = tabela[j]->letras[k];
           }
           testeTabela[C] = '\0';
-          printf("[%d] - %s\n", ++contSaidas, testeTabela);
+          printf("Saída [%d]: %s\n", ++contSaidas, testeTabela);
           return;
         }
       }
+      printf("\n");
     }
     if (atual < C-caracteresTabela) {
       // printf("Foi de [%s] --para-> ", testeTabela);
@@ -176,6 +188,7 @@ void weakComTabela(TabelaNode** tabela, Key sum, int atual, Key pass) {
       weakComTabela(tabela, aux, atual+1, pass);
     }
   }
+  printf("\n");
 }
 
 // Encripta a palavra dada como entrada e compara a
@@ -313,7 +326,7 @@ int main(int argc, char *argv[]) {
     }
     palavra[C] = '\0';// para a string ser printada precisa terinar com '\0
 
-    entrada = init_key((unsigned char *) argv[1]);
+    entrada = init_key((unsigned char *) palavra);
     //print_key(entrada);
     // Gera palavra de tamanho variad
     //     palvra é a string que recebe todas as combinações
@@ -325,6 +338,7 @@ int main(int argc, char *argv[]) {
 
     somaCaracteres(0);
 
+    printf("Criando tabela de símbolos\n");
     if (C > 1 && C <= 5) {
       caracteresTabela = C-1;
       tabelaCombinacoes = criaTabela();
@@ -332,6 +346,7 @@ int main(int argc, char *argv[]) {
       caracteresTabela = 5;
       tabelaCombinacoes = criaTabela();
     }
+    printf("Tabela de símbolos criada com sucesso\n");
 
 
     Key sum = {{0}};
@@ -350,19 +365,10 @@ int main(int argc, char *argv[]) {
       free(tabelaCombinacoes);
     }
 
-    printf("\nPrograma encerrado com sucesso\n\n");
-    return 0;
-
-    //weak(palavra);
-
-
-
-    weakNew(sum, 0, pass);
-
     if (contSaidas == 0) {
       printf("Nenhuma senha possível\n");
     }
 
-    //geradorPalavra(0, palavra);
-
+    printf("\nPrograma encerrado com sucesso\n\n");
+    return 0;
 }
