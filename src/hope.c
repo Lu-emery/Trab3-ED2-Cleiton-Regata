@@ -158,20 +158,20 @@ void weakComTabela(Key sum, int atual, Key pass) {
         printf("Saída: [%s]\n", testeTabela);
       }
     }
-
   }
-    if (atual < C-caracteresTabela) {
-      // Para cada letra na posição 'atual'
-      for (int i = 0; i < R; i++) {
 
-        // Adiciona o valor da letra 'ALPHABET[i]' na posição 'atual' à chave
-        aux = add(sum, TSomas[atual][i]);
-        // Adiciona o caracter à string
-        testeTabela[atual] = ALPHABET[i];
+  if (atual <= C-caracteresTabela) {
+    // Para cada letra na posição 'atual'
+    for (int i = 0; i < R; i++) {
 
-        // Chama recursivmente a função para a próxima posição
-        weakComTabela(aux, atual+1, pass);
-    }
+      // Adiciona o valor da letra 'ALPHABET[i]' na posição 'atual' à chave
+      aux = add(sum, TSomas[atual][i]);
+      // Adiciona o caracter à string
+      testeTabela[atual] = ALPHABET[i];
+
+      // Chama recursivmente a função para a próxima posição
+      weakComTabela(aux, atual+1, pass);
+  }
   }
 }
 
