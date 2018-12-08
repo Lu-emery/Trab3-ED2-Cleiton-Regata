@@ -1,11 +1,11 @@
 
-enc:
+enc: key.o encrypt.o
 	gcc -Wall key.c encrypt.c -o encrypt
 
-decrypt:
+decrypt: key.o hope.o tabelaSimbolos.o key.h
 	gcc -Wall key.c hope.c tabelaSimbolos.c -o decrypt
 
-brute:
+brute: key.o brute.o
 	gcc -Wall key.c brute.c -o brute
 
 clean:

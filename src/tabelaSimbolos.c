@@ -63,6 +63,7 @@ int main(int argc, char *argv[]) {
   }
 
   // Encerra a execução
+
   printf("\nPrograma encerrado com sucesso\n\n");
   return 0;
 }

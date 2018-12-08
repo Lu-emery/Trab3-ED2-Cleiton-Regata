@@ -45,3 +45,5 @@ void somaCaracteres(int);
 void leituraTabela();
 // Transforma todos os caracteres de uma string em 'a', que tem o valor 0
 void palavraVazia(char*);
+
+void getElemColis();

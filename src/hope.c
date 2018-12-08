@@ -130,48 +130,51 @@ void weakComTabela(Key sum, int atual, Key pass) {
   TabelaNode* auxNode;
   Key aux = {{0}};
   testeTabela[atual] = '\0';
+  // Para cada letra na posição 'atual'
+  for (int i = 0; i < R; i++) {
 
-  // Se posição + caracteres armazenados = C
-  if (atual == C-caracteresTabela) {
+    // Adiciona o valor da letra 'ALPHABET[i]' na posição 'atual' à chave
+    aux = add(sum, TSomas[atual][i]);
+    // Adiciona o caracter à string
+    testeTabela[atual] = ALPHABET[i];
+    printf("[%s]\n", testeTabela);
 
-    Key passSub = sub(pass, sum);
-    // print_key(passSub);
+    // Se posição + caracteres armazenados = C
+    if (atual == C-caracteresTabela) {
 
-    int passSubHash = tabelaKeyHash(passSub);
-    if (tabelaCombinacoes[passSubHash] != NULL) {
-      auxNode = tabelaCombinacoes[passSubHash];
-      int cmp = 0;
-      while(auxNode != NULL) {
-        if (comparaKey(passSub, auxNode->chave)) {
-          cmp = 1;
-          break;
+      Key passSub = sub(pass, aux);
+      // print_key(passSub);
+
+      int passSubHash = tabelaKeyHash(passSub);
+      if (tabelaCombinacoes[passSubHash] != NULL) {
+        auxNode = tabelaCombinacoes[passSubHash];
+        int cmp = 0;
+        while(auxNode != NULL) {
+          if (comparaKey(passSub, auxNode->chave)) {
+            cmp = 1;
+            break;
+          }
+          auxNode = auxNode->next;
         }
-        auxNode = auxNode->next;
-      }
 
-      if (cmp) {
-        for (int k = 0; k < caracteresTabela; k++) {
-          testeTabela[k+atual] = auxNode->letras[k];
+        if (cmp) {
+          for (int k = 0; k < caracteresTabela; k++) {
+            testeTabela[k+atual] = auxNode->letras[k];
+          }
+          testeTabela[C] = '\0';
+
+          printf("Saída: [%s]\n", testeTabela);
         }
-        testeTabela[C] = '\0';
-
-        printf("Saída: [%s]\n", testeTabela);
       }
     }
-  }
 
-  if (atual <= C-caracteresTabela) {
-    // Para cada letra na posição 'atual'
-    for (int i = 0; i < R; i++) {
+    if (atual < C-caracteresTabela) {
 
-      // Adiciona o valor da letra 'ALPHABET[i]' na posição 'atual' à chave
-      aux = add(sum, TSomas[atual][i]);
-      // Adiciona o caracter à string
-      testeTabela[atual] = ALPHABET[i];
 
-      // Chama recursivmente a função para a próxima posição
-      weakComTabela(aux, atual+1, pass);
-  }
+
+        // Chama recursivmente a função para a próxima posição
+        weakComTabela(aux, atual+1, pass);
+    }
   }
 }
 

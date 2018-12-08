@@ -64,11 +64,6 @@ int main(int argc, char *argv[]) {
     free(tabelaCombinacoes);
   }
 
-  // Teoricamente nunca pode acontecer
-  if (contSaidas == 0) {
-    printf("\nERRO\nNenhuma senha possível\n\n");
-  }
-
   // Encerra a execução
   printf("\nPrograma encerrado com sucesso\n\n");
   return 0;

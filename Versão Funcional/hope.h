@@ -14,15 +14,12 @@ typedef struct tabelaNode TabelaNode;
   // Cada resultado refente a um caracter específico em uma posição específica da string
   Key TSomas[C][32];
 
-  // Um contador para a posição onde inserir um elemento na tabela de combinações
-  int contTabela = 0;
   // Uma variável que armazena o tamanho da tabela de combinações
   int tamTabela;
   // O número de caracteres de cada combinação da tabela de combinações
   int caracteresTabela;
 
   // A contagem do número de saídas (usado para facilitar visualização da saída)
-  int contSaidas = 0;
   // O vetor de caracteres utilizado para armazenar a sequência de caracteres que chegou no valor correto
   unsigned char testeTabela[C+1];
 

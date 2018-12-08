@@ -52,6 +52,9 @@ TabelaNode** criaTabela() {
   return tabelaCombinacoes;
 }
 
+// Um contador para a posição onde inserir um elemento na tabela de combinações
+int contTabela = 0;
+
 void preencheTabela(TabelaNode** tabela, int atual, Key combinacao, unsigned char* nome) {
 
   // Cria uma chave auxiliar vazia
@@ -112,7 +115,7 @@ void weakComTabela(TabelaNode** tabela, Key sum, int atual, Key pass) {
         testeTabela[C] = '\0';
 
         // Printa a string resultante na tela
-        printf("[%d] - %s\n", ++contSaidas, testeTabela);
+        printf("%s\n", testeTabela);
         return;
       }
     }
