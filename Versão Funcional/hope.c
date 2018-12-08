@@ -120,17 +120,18 @@ void weakComTabela(TabelaNode** tabela, Key sum, int atual, Key pass) {
       }
     }
   }
+  if (atual < C-caracteresTabela) {
+    // Para cada letra na posição 'atual'
+    for (int i = 0; i < R; i++) {
 
-  // Para cada letra na posição 'atual'
-  for (int i = 0; i < R; i++) {
+      // Adiciona o valor da letra 'ALPHABET[i]' na posição 'atual' à chave
+      aux = add(sum, TSomas[atual][i]);
+      // Adiciona o caracter à string
+      testeTabela[atual] = ALPHABET[i];
 
-    // Adiciona o valor da letra 'ALPHABET[i]' na posição 'atual' à chave
-    aux = add(sum, TSomas[atual][i]);
-    // Adiciona o caracter à string
-    testeTabela[atual] = ALPHABET[i];
-
-    // Chama recursivmente a função para a próxima posição
-    weakComTabela(tabela, aux, atual+1, pass);
+      // Chama recursivmente a função para a próxima posição
+      weakComTabela(tabela, aux, atual+1, pass);
+    }
   }
 }
 
