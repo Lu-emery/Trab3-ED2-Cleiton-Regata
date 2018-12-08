@@ -52,6 +52,7 @@ void geradorPalavra(int atual, char palavra[C]){
         } else {
             palavra[atual] = ALPHABET[j];
             geradorPalavra(atual+1, palavra);
+
         }
     }
 }

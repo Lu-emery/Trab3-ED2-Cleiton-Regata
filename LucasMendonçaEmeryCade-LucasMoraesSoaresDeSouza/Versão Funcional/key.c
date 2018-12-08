@@ -137,20 +137,3 @@ Key setZero(){
   }
   return a;
 }
-
-Key sub(Key a, Key b) {
-    Key c = {{0}};
-    int carry = 0;
-    for (int i = C-1; i >= 0; i--){
-        int subt = a.digit[i] - b.digit[i] + carry;
-        c.digit[i] = subt % R;
-        if (subt < 0 && i != 0){
-            carry = -1;
-            c.digit[i] += R;
-        }
-        else {
-            carry = 0;
-        }
-    }
-    return c;
-}
